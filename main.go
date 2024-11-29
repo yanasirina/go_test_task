@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -10,8 +11,15 @@ type PingResponse struct {
 	DaysBefore2025 int
 }
 
+func Date(year, month, day int) time.Time {
+	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+}
+
 func GetDaysBefore2025() int {
-	return 5
+	neededDate := Date(2025, 1, 1)
+	durationToDate := time.Until(neededDate)
+	daysBeforeDate := int(durationToDate.Hours()) / 24
+	return daysBeforeDate
 }
 
 func PingHandler(context echo.Context) error {
