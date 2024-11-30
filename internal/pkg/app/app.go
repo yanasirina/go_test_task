@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/yanasirina/umbrella_corp_test_task/internal/app/endpoint"
 	"github.com/yanasirina/umbrella_corp_test_task/internal/app/middleware"
@@ -26,7 +27,11 @@ func New() (*App, error) {
 	return app, nil
 }
 
-func (app *App) Run() {
+func (app *App) Run() error {
 	log.Println("Server running...")
-	app.server.Start(":1323")
+	err := app.server.Start(":1323")
+	if err != nil {
+		return fmt.Errorf("failed to start http server: %w", err)
+	}
+	return nil
 }
