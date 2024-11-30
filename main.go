@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -28,8 +29,20 @@ func PingHandler(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
+func RedButtonMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(context echo.Context) error {
+		headers := context.Request().Header
+		userRole := headers.Get("User-Role")
+		if userRole == "admin" {
+			log.Println("red button user detected")
+		}
+		return next(context)
+	}
+}
+
 func main() {
 	server := echo.New()
+	server.Use(RedButtonMiddleware)
 	server.GET("/ping", PingHandler)
 	server.Logger.Fatal(server.Start(":1323"))
 }
