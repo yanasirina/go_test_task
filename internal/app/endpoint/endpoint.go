@@ -2,16 +2,21 @@ package endpoint
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/yanasirina/umbrella_corp_test_task/internal/app/service"
 	"net/http"
 )
 
-type Endpoint struct {
-	service service.Service
+type Service interface {
+	GetDaysBefore2025() int
 }
 
-func New() *Endpoint {
-	return &Endpoint{}
+type Endpoint struct {
+	service Service
+}
+
+func New(service Service) *Endpoint {
+	return &Endpoint{
+		service: service,
+	}
 }
 
 type PingResponse struct {
